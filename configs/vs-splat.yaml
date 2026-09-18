@@ -1,0 +1,73 @@
+gpu_id: [0,1,2,3]
+
+exp_name: VS-Splat/Final
+n_views: 4
+
+infer: False  # if inference => True
+
+model:
+
+    render: 3dgs
+    resolution: 512
+
+    n_predict: 16
+
+    sh_degree: 1
+    volume_resolution: 48
+    feature_resolution: 48
+
+    coarse: True
+    fine: True
+
+    ckpt_path: null # specify a ckpt path if you want to continue training
+
+
+# The preprocessed dataset can be downloaded from the following link:
+# GObjaverse: https://github.com/autonomousvision/LaRa
+# GSO: https://github.com/autonomousvision/LaRa
+# CO3D: https://github.com/stnamjef/GenerativeDensification
+train_dataset:
+    dataset_name: gobjeverse
+    data_root: /data # your path
+
+    split: train
+    img_size: [512,512] # image resolution
+    n_group: ${n_views}   # image resolution
+    n_scenes: 3000000
+    load_normal: False
+
+test_dataset:
+    dataset_name: gobjeverse
+    data_root: /data # your path
+
+    split: test
+    img_size: [512,512]
+    n_group: ${n_views}
+    n_scenes: 3000000
+    load_normal: False
+
+train:
+    batch_size: 4
+    lr: 4e-4
+    beta1: 0.9
+    beta2: 0.95
+    weight_decay: 0.05
+    # betas: [0.9, 0.95]
+    warmup_iters: 1000
+    n_epoch: 50
+    limit_train_batches: 0.2
+    limit_val_batches: 0.02
+    check_val_every_n_epoch: 1
+    use_rand_views: False
+
+    lambda_l2: 1.0
+    lambda_l1: 0.0
+    lambda_ssim: 0.5
+    lambda_lpips: 0.0
+
+test:
+    batch_size: 3
+
+logger: 
+    name: wandb
+    dir: /data/ # your path
